@@ -29,15 +29,15 @@ export class UserService {
   async deleteAvatar(id: string): Promise<User> {
     const user = await this.findOne(id);
     fs.unlinkSync(user.image_path);
-    return await this.update(id, {
-      image_path: null,
-      hash: null,
+    return {
       id: user.id,
       email: user.email,
       first_name: user.first_name,
       last_name: user.last_name,
       avatar: user.avatar,
-    });
+      image_path: null,
+      hash: null,
+    };
   }
 
   async update(id: string, user: User): Promise<User> {

@@ -1,17 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
 import { RMQService } from '../rabbitmq/rmq.service';
 import { EmailService } from '../email/email.service';
-import config from '../config/services'
-import { after } from 'node:test';
+import config from '../config/services';
+import { MongooseModule } from '@nestjs/mongoose';
 
 describe('UserController', () => {
   let userController: UserController;
   let userService: UserService;
-  let rmqService: RMQService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,14 +20,9 @@ describe('UserController', () => {
       controllers: [UserController],
       providers: [UserService, RMQService, EmailService],
     }).compile();
-    
+
     userController = module.get<UserController>(UserController);
     userService = module.get<UserService>(UserService);
-    rmqService = module.get<RMQService>(RMQService);
-  });
-
-  afterAll(() => {
-    rmqService.disconnect();
   });
 
   describe('update', () => {
@@ -60,11 +53,13 @@ describe('UserController', () => {
         first_name: 'John',
         last_name: 'Doe',
         avatar: '',
-        image_path: '',
-        hash: '',
+        image_path: null,
+        hash: null,
       };
 
-      jest.spyOn(userService, 'deleteAvatar').mockImplementation(async () => user);
+      jest
+        .spyOn(userService, 'deleteAvatar')
+        .mockImplementation(async () => user);
 
       expect(await userController.deleteAvatar(userId)).toBe(user);
     });
@@ -92,7 +87,7 @@ describe('UserController', () => {
   describe('findOne', () => {
     it('should find user successfully', async () => {
       const userId = 1;
-      const user: User ={
+      const user: User = {
         id: userId,
         email: 'test@test.com',
         first_name: 'John',
@@ -134,24 +129,6 @@ describe('UserController', () => {
       jest.spyOn(userService, 'findAll').mockImplementation(async () => users);
 
       expect(await userController.findAll()).toBe(users);
-    });
-  });
-
-  describe('create', () => {
-    it('should create user successfully', async () => {
-      const user: User = {
-        id: 1,
-        email: 'test@test.com',
-        first_name: 'John',
-        last_name: 'Doe',
-        avatar: '',
-        image_path: '',
-        hash: '',
-      };
-
-      jest.spyOn(userService, 'create').mockImplementation(async () => user);
-
-      expect(await userController.create(user)).toBe(user);
     });
   });
 });

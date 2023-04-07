@@ -82,7 +82,7 @@ export class UserController {
     const text = `Hello ${user.first_name},\n\nWelcome to our app!`;
     this.emailService.sendEmail(to, subject, text);
 
-    this.rmqService.publishUserCreatedEvent(createdUser);
+    this.rmqService.publish('', createdUser);
 
     return createdUser;
   }
