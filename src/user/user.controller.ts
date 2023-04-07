@@ -16,9 +16,8 @@ import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
 import axios, { AxiosResponse } from 'axios';
 import { createHash } from 'crypto';
-import { RMQService } from 'src/rabbitmq/rmq.service';
-import * as nodemailer from 'nodemailer';
-import { EmailService } from 'src/email/email.service';
+import { RMQService } from '../rabbitmq/rmq.service';
+import { EmailService } from '../email/email.service';
 
 @Controller('api/users')
 export class UserController {
@@ -34,7 +33,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async get(@Param('id') id): Promise<User> {
+  async findOne(@Param('id') id): Promise<User> {
     const user = await this.userService.findOne(id);
     if (!user) {
       try {
