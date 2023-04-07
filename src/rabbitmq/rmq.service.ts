@@ -8,9 +8,12 @@ export class RMQService implements OnModuleInit, OnModuleDestroy {
   private channel: Channel;
 
   async onModuleInit() {
-    console.log('RMQService has been initialized!');
     this.connection = await connect(config.RABBIT_MQ_URI);
     this.channel = await this.connection.createChannel();
+    this.channel.assertExchange(config.RABBIT_MQ_USERS_EXCHANGE, 'fanout', {
+      durable: false,
+    });
+    console.log('Connected to RabbitMQ');
   }
 
   async onModuleDestroy() {
@@ -19,9 +22,12 @@ export class RMQService implements OnModuleInit, OnModuleDestroy {
     console.log('RMQService has been destroyed!');
   }
 
-  async publish(queue: string, message: any) {
-    await this.channel.assertQueue(queue);
-    await this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
+  async publish(exchange: string, message: any, queue = '') {
+    await this.channel.publish(
+      exchange,
+      queue,
+      Buffer.from(JSON.stringify(message)),
+    );
   }
 
   async getConnection(): Promise<Connection> {
