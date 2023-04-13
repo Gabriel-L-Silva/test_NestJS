@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
@@ -6,19 +5,16 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop()
-  id: number;
-  
-  @Prop()
+  @Prop({ required: true, unique: true, type: String })
   email: string;
-  
-  @Prop()
+
+  @Prop({ required: true, type: String })
   first_name: string;
-  
-  @Prop()
+
+  @Prop({ required: true, type: String })
   last_name: string;
-  
-  @Prop()
+
+  @Prop({ required: true, type: String })
   avatar: string;
 
   @Prop()
