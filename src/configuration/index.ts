@@ -7,6 +7,7 @@ export const EMAIL_CONFIGURATION = {
   emailPassword: process.env.EMAIL_PASSWORD as string,
 };
 
-export const rabbitMQConfiguration = {
-  rabbitMQConnectionString: process.env.RABBITMQ_CONNECTION_STRING as string,
+export const RMQ_CONFIGURATION = {
+  connectionString: process.env.RABBITMQ_CONNECTION_STRING as string,
+  exchange: process.env.RABBITMQ_EXCHANGE as string,
 };

@@ -1,16 +1,16 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { connect, Connection, Channel } from 'amqplib';
-import config from '../config/services';
+import { RMQ_CONFIGURATION } from '../../../configuration';
 
 @Injectable()
-export class RMQService implements OnModuleInit, OnModuleDestroy {
+export class RMQEventServices implements OnModuleInit, OnModuleDestroy {
   private connection: Connection;
   private channel: Channel;
 
   async onModuleInit() {
-    this.connection = await connect(config.RABBIT_MQ_URI);
+    this.connection = await connect(RMQ_CONFIGURATION.connectionString);
     this.channel = await this.connection.createChannel();
-    this.channel.assertExchange(config.RABBIT_MQ_USERS_EXCHANGE, 'fanout', {
+    this.channel.assertExchange(RMQ_CONFIGURATION.exchange, 'fanout', {
       durable: false,
     });
     console.log('Connected to RabbitMQ');

@@ -4,6 +4,10 @@ import { PartialType } from '@nestjs/mapped-types';
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
+  id: any;
+
+  @IsString()
+  @IsNotEmpty()
   email: string;
 
   @IsString()

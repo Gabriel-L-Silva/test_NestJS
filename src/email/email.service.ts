@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { EMAIL_CONFIGURATION } from './configuration';
+import { EMAIL_CONFIGURATION } from '../configuration';
 
 @Injectable()
 export class EmailService {
@@ -10,8 +10,8 @@ export class EmailService {
       port: 587,
       secure: false,
       auth: {
-        user: config.EMAIL,
-        pass: config.EMAIL_PASSWORD,
+        user: EMAIL_CONFIGURATION.email,
+        pass: EMAIL_CONFIGURATION.emailPassword,
       },
     });
 
