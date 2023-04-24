@@ -95,14 +95,17 @@ export class UserService {
   async deleteAvatar(id: string): Promise<User> {
     const user = await this.findOne(id);
     this.cacheService.del(id);
-    return {
-      id: user.id,
-      email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      avatar: user.avatar,
-      hash: null,
-    };
+    return await this.userModel.findOneAndUpdate(
+      { id: id },
+      {
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        avatar: user.avatar,
+        hash: null,
+      },
+    );
   }
 
   async update(id: string, user: User): Promise<User> {
