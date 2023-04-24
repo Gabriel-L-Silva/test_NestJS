@@ -72,7 +72,6 @@ export class UserService {
   }
 
   async getAvatar(id: string): Promise<string> {
-    console.log(this.cacheService.get);
     const cachedData = await this.cacheService.get<{ image: string }>(id);
     if (cachedData) {
       return cachedData.image;

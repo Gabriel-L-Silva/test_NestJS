@@ -8,7 +8,7 @@ export class RMQService implements OnModuleInit, OnModuleDestroy {
   private channel: Channel;
 
   async onModuleInit() {
-    this.connection = await connect(config.rabbitMqUri);
+    this.connection = await connect(config.rabbitMqConnectionString);
     this.channel = await this.connection.createChannel();
     this.channel.assertExchange(config.rabbitMqUsersExchange, 'fanout', {
       durable: false,

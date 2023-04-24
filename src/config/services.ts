@@ -1,6 +1,7 @@
 export default {
   mongoConnectionString: process.env.MONGO_URI,
-  rabbitMqUri: process.env.RABBIT_MQ_URI || 'amqp://localhost:5672',
+  rabbitMqConnectionString:
+    process.env.RABBIT_MQ_URI || 'amqp://localhost:5672',
   rabbitMqUsersExchange: process.env.RABBIT_MQ_USERS_EXCHANGE || 'users',
   rabbitMqUsersQueue: process.env.RABBIT_MQ_USERS_QUEUE || 'users',
   cacheTTL: (process.env.CACHE_TTL || 60 * 60 * 24) as number,
