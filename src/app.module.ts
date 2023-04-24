@@ -1,18 +1,34 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './user/schemas/user.schema';
-import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
-import config from './config/services';
-import { RMQService } from './rabbitmq/rmq.service';
-import { EmailService } from './email/email.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './user/user.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(config.mongoURI),
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    ConfigModule.forRoot({ isGlobal: true }),
+    CacheModule.register({ isGlobal: true }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
+      }),
+      inject: [ConfigService],
+    }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          auth: {
+            user: configService.get<string>('EMAIL_USER'),
+            pass: configService.get<string>('EMAIL_PASSWORD'),
+          },
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    UserModule,
   ],
-  controllers: [UserController],
-  providers: [UserService, RMQService, EmailService],
 })
 export class AppModule {}

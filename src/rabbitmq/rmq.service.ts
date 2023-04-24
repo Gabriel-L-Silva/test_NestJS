@@ -8,9 +8,9 @@ export class RMQService implements OnModuleInit, OnModuleDestroy {
   private channel: Channel;
 
   async onModuleInit() {
-    this.connection = await connect(config.RABBIT_MQ_URI);
+    this.connection = await connect(config.rabbitMqUri);
     this.channel = await this.connection.createChannel();
-    this.channel.assertExchange(config.RABBIT_MQ_USERS_EXCHANGE, 'fanout', {
+    this.channel.assertExchange(config.rabbitMqUsersExchange, 'fanout', {
       durable: false,
     });
     console.log('Connected to RabbitMQ');

@@ -1,12 +1,13 @@
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { UserSchema } from './schemas/user.schema';
+import { UserSchema } from './user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
+import { RMQService } from 'src/rabbitmq/rmq.service';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, RMQService],
 })
 export class UserModule {}

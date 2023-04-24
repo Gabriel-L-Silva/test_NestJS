@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { User, UserSchema } from './schemas/user.schema';
+import { User, UserSchema } from './user.schema';
 import { RMQService } from '../rabbitmq/rmq.service';
 import { EmailService } from '../email/email.service';
 import config from '../config/services';

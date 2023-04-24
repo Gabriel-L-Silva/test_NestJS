@@ -1,11 +1,12 @@
 export default {
-  mongoURI:
-    'mongodb+srv://glsfacom:w0asKKtadSyfH5ce@cluster0.dcrylim.mongodb.net/?retryWrites=true&w=majority',
-  RABBIT_MQ_URI: 'amqp://localhost:5672',
-  RABBIT_MQ_USERS_EXCHANGE: 'users_created',
-  RABBIT_MQ_USERS_QUEUE: 'users',
-  RMQ_EXCHANGE: 'messages',
-  EMAIL: 'your_email@gmail.com',
-  EMAIL_PASSWORD: 'your_password',
-  NAME: 'your Name',
+  mongoConnectionString: process.env.MONGO_URI,
+  rabbitMqUri: process.env.RABBIT_MQ_URI || 'amqp://localhost:5672',
+  rabbitMqUsersExchange: process.env.RABBIT_MQ_USERS_EXCHANGE || 'users',
+  rabbitMqUsersQueue: process.env.RABBIT_MQ_USERS_QUEUE || 'users',
+  cacheTTL: (process.env.CACHE_TTL || 60 * 60 * 24) as number,
+  redisURI: process.env.REDIS_URI || 'redis://localhost:6379',
+  redisDb: process.env.REDIS_DB || 0,
+  email: process.env.EMAIL,
+  emailPassword: process.env.EMAIL_PASSWORD,
+  name: process.env.NAME,
 };
