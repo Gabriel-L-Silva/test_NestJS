@@ -1,11 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { User, UserSchema } from './user.schema';
+import { User } from './user.schema';
 import { RMQService } from '../rabbitmq/rmq.service';
-import { EmailService } from '../email/email.service';
-import config from '../config/services';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CacheModule } from '@nestjs/common';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { UserModule } from './user.module';
 
 describe('UserController', () => {
   let userController: UserController;
@@ -14,11 +16,32 @@ describe('UserController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        MongooseModule.forRoot(config.mongoURI),
-        MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+        ConfigModule.forRoot({ isGlobal: true }),
+        CacheModule.register({ isGlobal: true }),
+        MongooseModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: async (configService: ConfigService) => ({
+            uri: configService.get<string>('MONGO_URI'),
+          }),
+          inject: [ConfigService],
+        }),
+        MailerModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: async (configService: ConfigService) => ({
+            transport: {
+              host: 'smtp.gmail.com',
+              auth: {
+                user: configService.get<string>('EMAIL_USER'),
+                pass: configService.get<string>('EMAIL_PASSWORD'),
+              },
+            },
+          }),
+          inject: [ConfigService],
+        }),
+        UserModule,
       ],
       controllers: [UserController],
-      providers: [UserService, RMQService, EmailService],
+      providers: [UserService, RMQService],
     }).compile();
 
     userController = module.get<UserController>(UserController);
@@ -34,7 +57,6 @@ describe('UserController', () => {
         first_name: 'John',
         last_name: 'Doe',
         avatar: '',
-        image_path: '',
         hash: '',
       };
 
@@ -53,7 +75,6 @@ describe('UserController', () => {
         first_name: 'John',
         last_name: 'Doe',
         avatar: '',
-        image_path: null,
         hash: null,
       };
 
@@ -74,7 +95,6 @@ describe('UserController', () => {
         first_name: 'John',
         last_name: 'Doe',
         avatar: '',
-        image_path: '',
         hash: '',
       };
 
@@ -93,7 +113,6 @@ describe('UserController', () => {
         first_name: 'John',
         last_name: 'Doe',
         avatar: '',
-        image_path: '',
         hash: '',
       };
 
