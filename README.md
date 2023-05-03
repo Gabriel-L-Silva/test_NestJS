@@ -1,3 +1,5 @@
+This app defines an API for user storage within a MongoDB. It uses RabbitMQ to manage events and Redis for caching
+
 # Dependencies
 NodeJS 18.15.11+
 
